@@ -10,7 +10,7 @@ export class BorderCardDirective {
   private defaultColor: string = "#009688"; // Couleur par défault si aucune couleur de bordure n'a été prcisée dans le border template
   private defaultHeight: number = 180; // Hauteur par défaut du cadre pour nos bordures
 
-  constructor(private el :ElementRef) {
+  constructor(private el: ElementRef) {
     this.setBorder(this.initialColor);
     this.setHeight(this.defaultHeight);
   }
