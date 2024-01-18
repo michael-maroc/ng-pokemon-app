@@ -3,13 +3,13 @@ import { Pokemon } from '../pokemon';
 import { PokemonTypeColorPipe } from '../pokemon-type-color.pipe';
 import { CommonModule } from '@angular/common';
 import { BorderCardDirective } from '../border-card.directive';
-import { Router } from '@angular/router';
+import { Router, RouterLink } from '@angular/router';
 import { PokemonService } from '../pokemon.service';
 
 @Component({
   selector: 'app-list-pokemon',
   standalone: true,
-  imports: [CommonModule ,PokemonTypeColorPipe, BorderCardDirective],
+  imports: [CommonModule ,PokemonTypeColorPipe, BorderCardDirective, RouterLink],
   templateUrl: './list-pokemon.component.html'
 })
 export class ListPokemonComponent implements OnInit {
@@ -21,10 +21,11 @@ export class ListPokemonComponent implements OnInit {
     ) { }
 
   ngOnInit(): void {
-    this.pokemonList = this.pokemonService.getPokemonList();
+    this.pokemonService.getPokemonList()
+      .subscribe(pokemonList => this.pokemonList = pokemonList);
   }
 
-  gotToPokemon(pokemon: Pokemon) {
-    this.router.navigateByUrl(`/pokemon/${pokemon.id}`)
+  goToPokemon(pokemon: Pokemon) {
+    this.router.navigate(['/pokemon', pokemon.id]);
   }
 }

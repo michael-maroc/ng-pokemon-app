@@ -16,6 +16,7 @@ import { CommonModule } from '@angular/common';
 export class PokemonFormComponent implements OnInit {
   @Input() pokemon: Pokemon;
   types: string[];
+  isAddForm: boolean;
 
   constructor(private pokemonService: PokemonService, private router: Router) { }
 
@@ -23,6 +24,7 @@ export class PokemonFormComponent implements OnInit {
   ngOnInit(): void {
     // pokemonTypes
     this.types = this.pokemonService.getPokemonTypeList();
+    this.isAddForm = this.router.url.includes('add');
   }
 
   // vérification de l'existence du type du pokémon sélectionné
@@ -42,12 +44,6 @@ export class PokemonFormComponent implements OnInit {
     }
   }
 
-  // redirection vers la page du pokémon édité en cas de soumission du formulaire
-  onSubmit() {
-    console.log('Form submited !')
-    this.router.navigate(['/pokemon', this.pokemon.id]);
-  }
-
   // Si le pokémon n'a qu'un seul type et qu'on travaille dessus, on bloque la checkbox
   isTypesValid(type: string): boolean {
     if (this.pokemon.types.length == 1 && this.hasType(type)) {
@@ -60,5 +56,16 @@ export class PokemonFormComponent implements OnInit {
     }
 
     return true;
+  }
+
+  // redirection vers la page du pokémon édité en cas de soumission du formulaire
+  onSubmit() {
+    if(this.isAddForm) {
+      this.pokemonService.addPokemon(this.pokemon)
+        .subscribe((pokemon: Pokemon) => this.router.navigate(['/pokemon', pokemon.id]));
+    } else {
+      this.pokemonService.updatePokemon(this.pokemon)
+        .subscribe(() => this.router.navigate(['/pokemon', this.pokemon.id]));
+    }
   }
 }
